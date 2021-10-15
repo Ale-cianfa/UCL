@@ -25,9 +25,10 @@ eastings <- my_data %>%
 
 # Finding outliers----
 
-
-
-  
+#we are plotting the distribution of 
+  #the data because it might be useful to visually identify the outliers
+plot(eastings)
+plot(northings)
 
 
 
