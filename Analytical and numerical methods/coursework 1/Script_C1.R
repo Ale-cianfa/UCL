@@ -1,4 +1,5 @@
 # COURSEWORK 1 - ANALYTICAL AND NUMERICAL METHODS 
+# Author: Alessandra Cianfanelli
 
 # Libraries----
 library(tidyverse)  # for data wrangling
@@ -79,6 +80,9 @@ std.error(eastings$E_m) #sd error: 0.4541849
 mean(eastings$E_m) # value: 502123.1
 sd(eastings$E_m) #standard deviation: 9.950692
 
+mean(northings$N_m) #value: 186342.3
+sd(northings$N_m) #value: 10.96424 
+
 eastings_comp1 <- eastings %>% 
   mutate(zscore = (E_m - mean(E_m))/sd(E_m)) # do it need to group them? 
 
@@ -89,11 +93,16 @@ sd(eastings_comp1$zscore) #the sd for z scores is 1
 eastings_comp2 <- eastings %>% 
   mutate(z_score = scale(E_m))
 
+northings_comp <- northings %>% 
+  mutate(z_score = scale(N_m))
+
 mean(eastings_comp2$z_score) #does the mean of zscore has to be 0? I read it somewhere but couldn't find it confirmed
 sd(eastings_comp2$z_score)
 
 ## Summarising both to check they are correct----
 summary(eastings_comp1$zscore) #with this the mean that is returned is 0.0000 so it shoudl be good! 
 summary(eastings_comp2$z_score)
+
+#the standard deviation was already working 
 
 
