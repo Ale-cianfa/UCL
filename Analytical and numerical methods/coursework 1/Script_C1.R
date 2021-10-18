@@ -3,7 +3,8 @@
 # Libraries----
 library(tidyverse)  # for data wrangling
 library(ggthemes)   # for a mapping theme
-library(plotrix)    # for the standard error 
+library(plotrix) # for the standard error 
+library(xlsx) # to save the dataset as an xlsx file so i can check it in excel 
 
 # checking the wd 
 getwd()
@@ -78,10 +79,21 @@ std.error(eastings$E_m) #sd error: 0.4541849
 mean(eastings$E_m) # value: 502123.1
 sd(eastings$E_m) #standard deviation: 9.950692
 
-eastings_comp <- eastings %>% 
-  mutate(zscore = (E_m - mean(E_m))/sd(E_m))
+eastings_comp1 <- eastings %>% 
+  mutate(zscore = (E_m - mean(E_m))/sd(E_m)) # do it need to group them? 
 
-mean(eastings_comp$zscore) #does the mean of zscore has to be 0? I read it somewhere but couldn't find it confirmed
-sd(eastings_comp$zscore) #the sd for z scores is 1 
+mean(eastings_comp1$zscore) #does the mean of zscore has to be 0? I read it somewhere but couldn't find it confirmed
+sd(eastings_comp1$zscore) #the sd for z scores is 1 
+
+## Trying a different way to scale it in R (function scale())----
+eastings_comp2 <- eastings %>% 
+  mutate(z_score = scale(E_m))
+
+mean(eastings_comp2$z_score) #does the mean of zscore has to be 0? I read it somewhere but couldn't find it confirmed
+sd(eastings_comp2$z_score)
+
+## Summarising both to check they are correct----
+summary(eastings_comp1$zscore) #with this the mean that is returned is 0.0000 so it shoudl be good! 
+summary(eastings_comp2$z_score)
 
 
