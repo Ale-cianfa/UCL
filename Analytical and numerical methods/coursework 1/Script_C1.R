@@ -26,37 +26,17 @@ eastings <- my_data %>%
   dplyr::select(- N..m.) %>% 
   rename(Time_s = Time..s., E_m =E..m.)
 
-# Finding outliers----
-
-#we are plotting the distribution of 
-  #the data because it might be useful to visually identify the outliers
-
-plot(eastings)
-plot(northings)
-
 ## Finding initial mean and standard error----
   # NB: as we remove outliers the mean and standard error will- 
   #-change but this is the starting point
 
-# useful link: https://statsandr.com/blog/outliers-detection-in-r/#introduction
+mean(eastings$E_m) # value: 502123.1
+sd(eastings$E_m) #standard deviation: 9.950692
 
-summary(northings$N_m) #this gives us a summary of the data 
-std.error(northings$N_m) #sd error: 0.5004469
+mean(northings$N_m) #value: 186342.3
+sd(northings$N_m) #value: 10.96424 
 
-# Results: 
-#  Min.  1st Qu.  Median  Mean   3rd Qu.  Max. 
-# 186274  186338  186343  186342  186347  186388 
-# The mean is what we care about for the excercise = 186342
-
-summary(eastings$E_m)
-std.error(eastings$E_m) #sd error: 0.4541849
-
-# Results: 
-#  Min.    1st Qu. Median  Mean    3rd Qu. Max. 
-#  502063  502120  502123  502123  502128  502165 
-# The mean is what we care about for the excercise = 502123
-
-# Histogram of distribution 
+# Histogram of initial distribution----
 
 (dist_east <- ggplot(eastings, aes(x = E_m)) + 
     geom_histogram(binwidth = 5, colour = "#EEAD0E", fill = "gold") + 
@@ -70,39 +50,37 @@ std.error(eastings$E_m) #sd error: 0.4541849
     xlab("Northings") + 
     ylab("Count") +
     theme_bw()) 
+# They both have normal distribution but we already knew that 
 
-#They both have a normal distribution 
+#we can also plot the dsitribution of the data like
+  #because it might be useful to visually identify the outliers: 
+
+plot(eastings)
+plot(northings)
 
 ## Calculating the z-score of all values----
 
 # I think what i need to do is use mutate to add a column and add the formula there 
 
-mean(eastings$E_m) # value: 502123.1
-sd(eastings$E_m) #standard deviation: 9.950692
-
-mean(northings$N_m) #value: 186342.3
-sd(northings$N_m) #value: 10.96424 
-
-eastings_comp1 <- eastings %>% 
+# EAST: 
+eastings_comp <- eastings %>% 
   mutate(zscore = (E_m - mean(E_m))/sd(E_m)) # do it need to group them? 
+str(eastings_comp)
 
-mean(eastings_comp1$zscore) #does the mean of zscore has to be 0? I read it somewhere but couldn't find it confirmed
-sd(eastings_comp1$zscore) #the sd for z scores is 1 
+mean(eastings_comp$zscore) #does the mean of zscore has to be 0? why is that not shown here but it is in the summary? 
+sd(eastings_comp$zscore) #the sd for z scores is 1 
+summary(eastings_comp$zscore) #with this the mean that is returned is 0.0000 so it shoudl be good! 
 
-## Trying a different way to scale it in R (function scale())----
-eastings_comp2 <- eastings %>% 
-  mutate(z_score = scale(E_m))
+# NORTH: 
+north_comp <- northings %>% 
+  mutate(zscore = N_m - mean(N_m))
 
-northings_comp <- northings %>% 
-  mutate(z_score = scale(N_m))
+str(north_comp)
 
-mean(eastings_comp2$z_score) #does the mean of zscore has to be 0? I read it somewhere but couldn't find it confirmed
-sd(eastings_comp2$z_score)
+mean(north_comp$zscore) #
+sd(north_comp$zscore)  
+summary(north_comp$zscore)
 
-## Summarising both to check they are correct----
-summary(eastings_comp1$zscore) #with this the mean that is returned is 0.0000 so it shoudl be good! 
-summary(eastings_comp2$z_score)
 
-#the standard deviation was already working 
 
 
