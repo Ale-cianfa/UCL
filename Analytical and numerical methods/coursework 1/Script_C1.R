@@ -7,6 +7,7 @@ library(ggthemes)   # for a mapping theme
 library(plotrix) # for the standard error 
 library(xlsx) # to save the dataset as an xlsx file so i can check it in excel 
 
+
 # checking the wd 
 getwd()
 
@@ -58,29 +59,40 @@ sd(northings$N_m) #value: 10.96424
 plot(eastings)
 plot(northings)
 
-## Calculating the z-score of all values----
+## Calculating the z-score of all values and removing outliers----
 
 # I think what i need to do is use mutate to add a column and add the formula there 
 
-# EAST: 
-eastings_comp <- eastings %>% 
-  mutate(zscore = (E_m - mean(E_m))/sd(E_m)) # do it need to group them? 
-str(eastings_comp)
-
-mean(eastings_comp$zscore) #does the mean of zscore has to be 0? why is that not shown here but it is in the summary? 
-sd(eastings_comp$zscore) #the sd for z scores is 1 
-summary(eastings_comp$zscore) #with this the mean that is returned is 0.0000 so it shoudl be good! 
-
 # NORTH: 
 north_comp <- northings %>% 
-  mutate(zscore = N_m - mean(N_m))
+  mutate(zscore = (N_m - mean(N_m))/sd(N_m)) %>% 
+  filter(zscore <= 2.5758) %>% 
+  filter(zscore >= -2.5758) #2.5758 is the critical value for removal fora 99% confidence two-tailed test
 
-str(north_comp)
+(dist_north2 <- ggplot(north_comp, aes(x = N_m)) +
+    geom_histogram(binwidth = 5, colour = "#008B8B", 
+                   fill = "#7AC5CD") + 
+    xlab("Northings") + 
+    ylab("Count") +
+    theme_bw()) 
 
-mean(north_comp$zscore) #
-sd(north_comp$zscore)  
-summary(north_comp$zscore)
+# EAST: 
 
+east_comp <- eastings %>% 
+  mutate(zscore = (E_m - mean(E_m))/sd(E_m)) %>% 
+  filter(zscore <= 2.5758) %>% 
+  filter(zscore >= -2.5758) #2.5758 is the critical value for removal fora 99% confidence two-tailed test
+
+(dist_east2 <- ggplot(east_comp, aes(x = E_m)) +
+    geom_histogram(binwidth = 5, colour = "#EEAD0E", fill = "gold") + 
+    xlab("Northings") + 
+    ylab("Count") +
+    theme_bw()) 
+
+## Final Summary----
+
+mean(east_comp$E_m) # value: 502123.7 (need to add .values)
+sd(east_comp$E_m) #standard deviation: 5.58031
 
 
 
