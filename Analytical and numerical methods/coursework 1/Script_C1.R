@@ -47,16 +47,21 @@ sd(northings$N_m) #Initial standard deviation: 10.9642
 
 (dist_east <- ggplot(eastings, aes(x = E_m)) + 
     geom_histogram(binwidth = 5, colour = "#EEAD0E", fill = "gold") + 
+   theme_classic() +
     xlab("Eastings") + 
-    ylab("Count") +
-    theme_bw()) 
+    ylab("Count"))
+
+#ggsave(dist_east, file = "Analytical and numerical methods/coursework 1/initial_E_dist.png", height = 4, width = 6)
 
 (dist_north <- ggplot(northings, aes(x = N_m)) +
     geom_histogram(binwidth = 5, colour = "#008B8B", 
                    fill = "#7AC5CD") + 
+    theme_classic() +
     xlab("Northings") + 
-    ylab("Count") +
-    theme_bw()) 
+    ylab("Count"))
+
+#ggsave(dist_north, file = "Analytical and numerical methods/coursework 1/initial_N_dist.png", height = 4, width = 6)
+
 
 # They both have normal distribution, which was already known, 
   # but it is also possible to see lots of values towards the tails of the function 
@@ -68,6 +73,7 @@ north_comp <- northings %>%
   mutate(zscore = (N_m - mean(N_m))/sd(N_m)) %>% 
   filter(zscore <= 2.5758) %>% 
   filter(zscore >= -2.5758) 
+
 #NB: 2.5758 is the critical value for removal fora 99% confidence two-tailed test, 
   # this was found using excel (refer to spreadsheet)
 
@@ -76,10 +82,11 @@ north_comp <- northings %>%
 (dist_north2 <- ggplot(north_comp, aes(x = N_m)) +
     geom_histogram(binwidth = 5, colour = "#008B8B", 
                    fill = "#7AC5CD") + 
-    theme_minimal() +
+    theme_classic() +
     xlab("Northings") + 
-    ylab("Count") +
-    theme_bw()) 
+    ylab("Count"))
+
+#ggsave(dist_north2, file = "Analytical and numerical methods/coursework 1/N_distribution_after.png", height = 4, width = 6)
 
 # From the histogram of distribution we can see that a lot of the values -
   #- that were at the end of the tail previously have now been removed 
@@ -95,9 +102,12 @@ east_comp <- eastings %>%
 
 (dist_east2 <- ggplot(east_comp, aes(x = E_m)) +
     geom_histogram(binwidth = 5, colour = "#EEAD0E", fill = "gold") + 
+    theme_classic() +
     xlab("Northings") + 
-    ylab("Count") +
-    theme_bw()) 
+    ylab("Count")) 
+
+#ggsave(dist_east2, file = "Analytical and numerical methods/coursework 1/E_distribution_after.png", height = 4, width = 6)
+
 # Similar to above, the curve is now much more centered without
   # a lot of the noise towards the end of the tails 
 
