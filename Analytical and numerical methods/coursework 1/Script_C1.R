@@ -1,28 +1,29 @@
-# COURSEWORK 1 - ANALYTICAL AND NUMERICAL METHODS 
+# COURSEWORK 1 - ANALYTICAL AND NUMERICAL METHODS - WORKSHEET
 # Author: Alessandra Cianfanelli
 
-# Libraries----
+## Libraries----
 library(tidyverse)  # for data wrangling
 library(ggthemes)   # for a mapping theme
 library(plotrix) # for the standard error 
-library(xlsx) # to save the dataset as an xlsx file so i can check it in excel 
-
 
 # checking the wd 
 getwd()
 
-# Importing the data----
+## Importing the data----
 my_data <- read.csv("Analytical and numerical methods/coursework 1/my_data_aanm_c1.csv")
-str(my_data)
+str(my_data) #Checking for what type of variables are in the dataset 
 
-# Should I split it into two datasets (one with time and northings and one with T and eastings)
+## Splitting the datasets----
 
-# splitting datasets for northings and eastings and renaming the columns so is more legible
+# Here i am splitting the dataset into northings and eastings - 
+  # - as these are treated as independent from eachother for the purpose of this excercise 
 
+# Northings: 
 northings <- my_data %>% 
   dplyr::select(- E..m.) %>% 
   rename(Time_s = Time..s., N_m =N..m.)
 
+# Eastings: 
 eastings <- my_data %>% 
   dplyr::select(- N..m.) %>% 
   rename(Time_s = Time..s., E_m =E..m.)
@@ -31,11 +32,16 @@ eastings <- my_data %>%
   # NB: as we remove outliers the mean and standard error will- 
   #-change but this is the starting point
 
-mean(eastings$E_m) # value: 502123.1
-sd(eastings$E_m) #standard deviation: 9.950692
+options(digits = 10)
 
-mean(northings$N_m) #value: 186342.3
-sd(northings$N_m) #value: 10.96424 
+#EAST: 
+mean(eastings$E_m) # Initial mean: 502123.0578
+sd(eastings$E_m) #Initial standard deviation: 9.9507
+  #NB: the sd() function is computed by calculating the square root of -
+    # - the variance (which is calculated using with the var function and  n-1 as the denominator) 
+
+mean(northings$N_m) #Initial mean: 186342.2976
+sd(northings$N_m) #Initial standard deviation: 10.9642
 
 # Histogram of initial distribution----
 
@@ -51,48 +57,63 @@ sd(northings$N_m) #value: 10.96424
     xlab("Northings") + 
     ylab("Count") +
     theme_bw()) 
-# They both have normal distribution but we already knew that 
 
-#we can also plot the dsitribution of the data like
-  #because it might be useful to visually identify the outliers: 
-
-plot(eastings)
-plot(northings)
+# They both have normal distribution, which was already known, 
+  # but it is also possible to see lots of values towards the tails of the function 
 
 ## Calculating the z-score of all values and removing outliers----
-
-# I think what i need to do is use mutate to add a column and add the formula there 
 
 # NORTH: 
 north_comp <- northings %>% 
   mutate(zscore = (N_m - mean(N_m))/sd(N_m)) %>% 
   filter(zscore <= 2.5758) %>% 
-  filter(zscore >= -2.5758) #2.5758 is the critical value for removal fora 99% confidence two-tailed test
+  filter(zscore >= -2.5758) 
+#NB: 2.5758 is the critical value for removal fora 99% confidence two-tailed test, 
+  # this was found using excel (refer to spreadsheet)
+
+# Observation count northings afrer outlier removal: 463 
 
 (dist_north2 <- ggplot(north_comp, aes(x = N_m)) +
     geom_histogram(binwidth = 5, colour = "#008B8B", 
                    fill = "#7AC5CD") + 
+    theme_minimal() +
     xlab("Northings") + 
     ylab("Count") +
     theme_bw()) 
+
+# From the histogram of distribution we can see that a lot of the values -
+  #- that were at the end of the tail previously have now been removed 
 
 # EAST: 
 
 east_comp <- eastings %>% 
   mutate(zscore = (E_m - mean(E_m))/sd(E_m)) %>% 
   filter(zscore <= 2.5758) %>% 
-  filter(zscore >= -2.5758) #2.5758 is the critical value for removal fora 99% confidence two-tailed test
+  filter(zscore >= -2.5758)
+
+# Observation count eastings afrer outlier removal: 462
 
 (dist_east2 <- ggplot(east_comp, aes(x = E_m)) +
     geom_histogram(binwidth = 5, colour = "#EEAD0E", fill = "gold") + 
     xlab("Northings") + 
     ylab("Count") +
     theme_bw()) 
+# Similar to above, the curve is now much more centered without
+  # a lot of the noise towards the end of the tails 
 
 ## Final Summary----
 
-mean(east_comp$E_m) # value: 502123.7 (need to add .values)
-sd(east_comp$E_m) #standard deviation: 5.58031
+options(digits = 10) #making sure I have enough decimal places (4 to reflect the original dataset)
+
+#NORTH: 
+mean(north_comp$N_m) # value: 186343.0604
+sd(north_comp$N_m) #standard deviation: 6.9732 
+
+#EAST: 
+mean(east_comp$E_m) # value: 502123.7236 
+sd(east_comp$E_m, digits = decimal_length) #standard deviation: 5.5803
+
+
 
 
 
