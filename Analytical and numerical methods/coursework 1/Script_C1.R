@@ -103,10 +103,10 @@ east_comp <- eastings %>%
 (dist_east2 <- ggplot(east_comp, aes(x = E_m)) +
     geom_histogram(binwidth = 5, colour = "#EEAD0E", fill = "gold") + 
     theme_classic() +
-    xlab("Northings") + 
+    xlab("Eastings") + 
     ylab("Count")) 
 
-#ggsave(dist_east2, file = "Analytical and numerical methods/coursework 1/E_distribution_after.png", height = 4, width = 6)
+ggsave(dist_east2, file = "Analytical and numerical methods/coursework 1/E_distribution_after.png", height = 4, width = 6)
 
 # Similar to above, the curve is now much more centered without
   # a lot of the noise towards the end of the tails 
