@@ -2,9 +2,7 @@
 # Author: Alessandra Cianfanelli
 
 ## Libraries----
-library(tidyverse)  # for data wrangling
-library(ggthemes)   # for a mapping theme
-library(plotrix) # for the standard error 
+library(tidyverse)  # for data wrangling and plotting
 
 # checking the wd 
 getwd()
@@ -46,7 +44,7 @@ sd(northings$N_m) #Initial standard deviation: 10.9642
 # Histogram of initial distribution----
 
 (dist_east <- ggplot(eastings, aes(x = E_m)) + 
-    geom_histogram(binwidth = 5, colour = "#EEAD0E", fill = "gold") + 
+    geom_histogram(binwidth = 5, colour = "#A22EDC", fill = "#D783FF") + 
    theme_classic() +
     xlab("Eastings") + 
     ylab("Count"))
@@ -54,8 +52,8 @@ sd(northings$N_m) #Initial standard deviation: 10.9642
 #ggsave(dist_east, file = "Analytical and numerical methods/coursework 1/initial_E_dist.png", height = 4, width = 6)
 
 (dist_north <- ggplot(northings, aes(x = N_m)) +
-    geom_histogram(binwidth = 5, colour = "#008B8B", 
-                   fill = "#7AC5CD") + 
+    geom_histogram(binwidth = 5, colour = "#7A81FF", 
+                   fill = "#A4B4FD") + 
     theme_classic() +
     xlab("Northings") + 
     ylab("Count"))
@@ -80,13 +78,13 @@ north_comp <- northings %>%
 # Observation count northings afrer outlier removal: 463 
 
 (dist_north2 <- ggplot(north_comp, aes(x = N_m)) +
-    geom_histogram(binwidth = 5, colour = "#008B8B", 
-                   fill = "#7AC5CD") + 
+    geom_histogram(binwidth = 5, colour = "#7A81FF", 
+                   fill = "#A4B4FD") + 
     theme_classic() +
     xlab("Northings") + 
     ylab("Count"))
 
-#ggsave(dist_north2, file = "Analytical and numerical methods/coursework 1/N_distribution_after.png", height = 4, width = 6)
+ggsave(dist_north2, file = "Analytical and numerical methods/coursework 1/N_distribution_after.png", height = 4, width = 6)
 
 # From the histogram of distribution we can see that a lot of the values -
   #- that were at the end of the tail previously have now been removed 
@@ -101,7 +99,7 @@ east_comp <- eastings %>%
 # Observation count eastings afrer outlier removal: 462
 
 (dist_east2 <- ggplot(east_comp, aes(x = E_m)) +
-    geom_histogram(binwidth = 5, colour = "#EEAD0E", fill = "gold") + 
+    geom_histogram(binwidth = 5, colour = "#A22EDC", fill = "#D783FF") + 
     theme_classic() +
     xlab("Eastings") + 
     ylab("Count")) 
@@ -121,7 +119,7 @@ sd(north_comp$N_m) #standard deviation: 6.9732
 
 #EAST: 
 mean(east_comp$E_m) # value: 502123.7236 
-sd(east_comp$E_m, digits = decimal_length) #standard deviation: 5.5803
+sd(east_comp$E_m) #standard deviation: 5.5803
 
 
 
