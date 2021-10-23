@@ -49,7 +49,7 @@ sd(northings$N_m) #Initial standard deviation: 10.9642
     xlab("Eastings") + 
     ylab("Count"))
 
-#ggsave(dist_east, file = "Analytical and numerical methods/coursework 1/initial_E_dist.png", height = 4, width = 6)
+#ggsave(dist_east, file = "Analytical and numerical methods/coursework 1/img/initial_E_dist.png", height = 4, width = 6)
 
 (dist_north <- ggplot(northings, aes(x = N_m)) +
     geom_histogram(binwidth = 5, colour = "#7A81FF", 
@@ -58,7 +58,7 @@ sd(northings$N_m) #Initial standard deviation: 10.9642
     xlab("Northings") + 
     ylab("Count"))
 
-#ggsave(dist_north, file = "Analytical and numerical methods/coursework 1/initial_N_dist.png", height = 4, width = 6)
+#ggsave(dist_north, file = "Analytical and numerical methods/coursework 1/img/initial_N_dist.png", height = 4, width = 6)
 
 
 # They both have normal distribution, which was already known, 
@@ -84,7 +84,7 @@ north_comp <- northings %>%
     xlab("Northings") + 
     ylab("Count"))
 
-ggsave(dist_north2, file = "Analytical and numerical methods/coursework 1/N_distribution_after.png", height = 4, width = 6)
+#ggsave(dist_north2, file = "Analytical and numerical methods/coursework 1/img/N_distribution_after.png", height = 4, width = 10)
 
 # From the histogram of distribution we can see that a lot of the values -
   #- that were at the end of the tail previously have now been removed 
@@ -104,7 +104,7 @@ east_comp <- eastings %>%
     xlab("Eastings") + 
     ylab("Count")) 
 
-ggsave(dist_east2, file = "Analytical and numerical methods/coursework 1/E_distribution_after.png", height = 4, width = 6)
+#ggsave(dist_east2, file = "Analytical and numerical methods/coursework 1/img/E_distribution_after.png", height = 4, width = 6)
 
 # Similar to above, the curve is now much more centered without
   # a lot of the noise towards the end of the tails 
