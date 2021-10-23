@@ -2,7 +2,7 @@
 # Author: Alessandra Cianfanelli
 
 ## Libraries----
-library(tidyverse)  # for data wrangling and plotting
+library(tidyverse)  # for data wrangling and plotting (dplyr and ggplot packages)
 
 ## Loading the data from my own working directory----
   #NB: these data sets were pasted from excel into a csv file in order to compute the graphs 
@@ -29,7 +29,7 @@ northings <- northings %>%
 # Initial Distribution Eastings
 
 (dist_east <- ggplot(complete, aes(x = E_m)) + 
-   geom_histogram(binwidth = 5, colour = "#A22EDC", fill = "#D783FF") + 
+   geom_histogram(binwidth = 4, colour = "#A22EDC", fill = "#D783FF") + 
    theme_classic() +
    xlab("Eastings") + 
    ylab("Count"))
@@ -39,7 +39,7 @@ northings <- northings %>%
 # Initial Distribution Northings
 
 (dist_north <- ggplot(complete, aes(x = N_m)) +
-    geom_histogram(binwidth = 5, colour = "#7A81FF", 
+    geom_histogram(binwidth = 4, colour = "#7A81FF", 
                    fill = "#A4B4FD") + 
     theme_classic() +
     xlab("Northings") + 
@@ -52,7 +52,7 @@ northings <- northings %>%
 # New Eastings Distribution
 
 (final_east <- ggplot(eastings, aes(x = E_m)) +
-   geom_histogram(binwidth = 5, colour = "#A22EDC", fill = "#D783FF") + 
+   geom_histogram(binwidth = 4, colour = "#A22EDC", fill = "#D783FF") + 
    theme_classic() +
    xlab("Eastings") + 
    ylab("Count")) 
@@ -62,11 +62,15 @@ northings <- northings %>%
 # New Northings Distribution 
 
 (final_north <- ggplot(northings, aes(x = N_m)) +
-   geom_histogram(binwidth = 5, colour = "#7A81FF", 
+   geom_histogram(binwidth = 4, colour = "#7A81FF", 
                   fill = "#A4B4FD") + 
    theme_classic() +
+   theme(plot.margin = margin(10, 25, 10, 10)) + #this allows me to print out the entire xaxis
    xlab("Northings") + 
    ylab("Count"))
+
+#ggsave(final_north, file = "Analytical and numerical methods/coursework 1/img/N_distribution_after.png", height = 4, width = 10)
+
 
 
 
