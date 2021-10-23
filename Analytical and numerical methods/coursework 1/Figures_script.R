@@ -32,7 +32,7 @@ northings <- northings %>%
    geom_histogram(binwidth = 4, colour = "#A22EDC", fill = "#D783FF") + 
    theme_classic() +
    xlab("Eastings") + 
-   ylab("Count"))
+   ylab("Frequency"))
 
 #ggsave(dist_east, file = "Analytical and numerical methods/coursework 1/img/initial_E_dist.png", height = 4, width = 6)
 
@@ -43,7 +43,7 @@ northings <- northings %>%
                    fill = "#A4B4FD") + 
     theme_classic() +
     xlab("Northings") + 
-    ylab("Count"))
+    ylab("Frequency"))
 
 #ggsave(dist_north, file = "Analytical and numerical methods/coursework 1/img/initial_N_dist.png", height = 4, width = 6)
 
@@ -55,7 +55,7 @@ northings <- northings %>%
    geom_histogram(binwidth = 4, colour = "#A22EDC", fill = "#D783FF") + 
    theme_classic() +
    xlab("Eastings") + 
-   ylab("Count")) 
+   ylab("Frequency")) 
 
 #ggsave(final_east, file = "Analytical and numerical methods/coursework 1/img/E_distribution_after.png", height = 4, width = 6)
 
@@ -67,9 +67,9 @@ northings <- northings %>%
    theme_classic() +
    theme(plot.margin = margin(10, 25, 10, 10)) + #this allows me to print out the entire xaxis
    xlab("Northings") + 
-   ylab("Count"))
+   ylab("Frequency"))
 
-#ggsave(final_north, file = "Analytical and numerical methods/coursework 1/img/N_distribution_after.png", height = 4, width = 10)
+#ggsave(final_north, file = "Analytical and numerical methods/coursework 1/img/N_distribution_after.png", height = 4, width = 6)
 
 
 
