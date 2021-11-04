@@ -1,4 +1,4 @@
-#COURSEWORK 1 - ANALYTICAL AND NUMERICAL METHODS - Figurres
+#COURSEWORK 1 - ANALYTICAL AND NUMERICAL METHODS - Figures
 # Author: Alessandra Cianfanelli
 
 ## Libraries----
