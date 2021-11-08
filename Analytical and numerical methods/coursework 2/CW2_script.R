@@ -1,11 +1,8 @@
 # DAN Coursework 2 script for graphs
-# Candidate number: rvzk6
-# dzta: 8th November 2021
+# data: 8th November 2021
 
 ## Loading Packages--- 
 library(tidyverse) #this contains the ggplot package for graphing 
-library(ggstatsplot)
-library(palmerpenguins)
 
 ## Loading the Datasets and basic data wrangling----
 primary <- read.csv("Analytical and numerical methods/coursework 2/Dan cw2 final primary.csv")
