@@ -85,8 +85,8 @@ boroughs_i <- boroughs %>%
 ##Making the lables---- 
   #NB: this is all from the R graph gallery 
 
-boroughs_i <- data.frame(boroughs_i, id= seq(1,33))
-label_data <- boroughs_i
+boroughs_comp <- data.frame(boroughs_i, id= seq(1,33), open_space = boroughs_os$open_space)
+label_data <- boroughs_comp
 number_of_bar <- nrow(label_data)
 angle <-  90 - 360 * (label_data$id-0.5) /number_of_bar    
 label_data$hjust<-ifelse( angle < -90, 1, 0)
@@ -94,22 +94,22 @@ label_data$angle<-ifelse(angle < -90, angle+180, angle)
 
 ## Circular barplot for income----
 
-boroughs_i <- data.frame(boroughs_i, condition= seq(1,33))
+boroughs_comp <- data.frame(boroughs_comp, condition_i= seq(1,33))
 
-boroughs_i$condition <- c("4","1", "3", "2", "1", "3", "4", "2",
+boroughs_comp$condition_i <- c("4","1", "3", "2", "1", "3", "4", "2",
                           "2", "2", "2", "2", "4","2","2","2",
                           "2","2","3","9", "3", "2", "2","3", 
                           "1","2", "5", "2","2","2","1", "4", "6")
 
-colors <- c("#97DFFC", "#858AE3", "#7364D2", 
-            "#613DC1", "#5829A7", "#3D0E61", "#2C0735")
-(plt_i <- ggplot(boroughs_i, aes(x = Borough, y = House_income, fill = condition)) + 
+colors_i <- c("#D7F3FE", "#8eb5f0", "#7364d2", 
+            "#613dc1", "#5829a7", "#4e148c", "#3d0e61")
+(plt_i <- ggplot(boroughs_comp, aes(x = Borough, y = House_income, fill = condition)) + 
     geom_bar(stat='identity') + 
   #  ylim(0,130000) +
     theme_minimal() + 
     scale_fill_manual(labels=c("£30-40k","£40-50k","£50-60k",
                                "£60-70k", "£70-80k", "£80-90k", "£110-120k"), 
-                      values = colors) +
+                      values = colors_i) +
     theme(legend.position = "right",
           legend.title = element_text(size = 10, face ="bold"),
           axis.text.x =element_blank(),
@@ -126,6 +126,35 @@ colors <- c("#97DFFC", "#858AE3", "#7364D2",
              angle= label_data$angle, inherit.aes = FALSE) +
   coord_polar())
 
-ggsave("Cartography/week_3/income_plot.png", plot = plt_i)
+#ggsave("Cartography/week_3/income_plot.png", plot = plt_i)
 
+colors_os <- c("#D7F3FE", "#8eb5f0", "#7364d2", 
+              "#613dc1", "#5829a7", "#4e148c", "#3d0e61")
+
+boroughs_comp <- data.frame(boroughs_comp, condition_os= seq(1,33))
+
+boroughs_comp$condition_os <- c("1","3", "3", "3", "2", "5", "2", "3",
+                          "3", "4", "3", "2", "2","2","3","5",
+                          "4","3","1","1", "3", "2", "2","3", 
+                          "2","4", "5", "2","3","2","3", "3", "2")
+
+(plt_os <- ggplot(boroughs_comp, aes(x = Borough, y = open_space, fill = Borough)) + 
+    geom_bar(stat='identity') + 
+    #  ylim(0,130000) +
+    theme_minimal() + 
+    theme(legend.position = "none",
+          legend.title = element_text(size = 10, face ="bold"),
+          axis.text.x =element_blank(),
+          axis.ticks.x=element_blank(),
+          axis.title = element_blank(),
+          axis.text.y =element_blank(),
+          panel.grid = element_blank(),
+          axis.ticks.y=element_blank(),
+          text = element_text(size = 11),
+          plot.title = element_text(size = 16, face ="bold", hjust = 0.5)) +
+    labs(fill = "Percentage \nGreen \nSpace") + 
+    geom_text(data=label_data, aes(x=id, y = 60, label=Borough, hjust=hjust), 
+              color="black", fontface="bold",alpha=1, size=2, 
+              angle= label_data$angle, inherit.aes = FALSE) +
+    coord_polar())
   
