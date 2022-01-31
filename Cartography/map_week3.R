@@ -7,6 +7,8 @@ library(ggtext)
 library(fmsb)
 library("wesanderson")
 library(viridis)
+library(RColorBrewer)
+
 
 # Dowloading the data----
 wards <- read.csv("Cartography/week_3/Wards_info.csv")
@@ -80,19 +82,50 @@ str(boroughs_os)
 boroughs_i <- boroughs %>% 
   select(c(Borough, House_income))
 
-## Circular barplot for income
-(plt_i <- ggplot(boroughs_i, aes(x = Borough, y = House_income, fill = Borough)) + 
+##Making the lables---- 
+  #NB: this is all from the R graph gallery 
+
+boroughs_i <- data.frame(boroughs_i, id= seq(1,33))
+label_data <- boroughs_i
+number_of_bar <- nrow(label_data)
+angle <-  90 - 360 * (label_data$id-0.5) /number_of_bar    
+label_data$hjust<-ifelse( angle < -90, 1, 0)
+label_data$angle<-ifelse(angle < -90, angle+180, angle)
+
+## Circular barplot for income----
+
+boroughs_i <- data.frame(boroughs_i, condition= seq(1,33))
+
+boroughs_i$condition <- c("4","1", "3", "2", "1", "3", "4", "2",
+                          "2", "2", "2", "2", "4","2","2","2",
+                          "2","2","3","9", "3", "2", "2","3", 
+                          "1","2", "5", "2","2","2","1", "4", "6")
+
+colors <- c("#97DFFC", "#858AE3", "#7364D2", 
+            "#613DC1", "#5829A7", "#3D0E61", "#2C0735")
+(plt_i <- ggplot(boroughs_i, aes(x = Borough, y = House_income, fill = condition)) + 
     geom_bar(stat='identity') + 
-    scale_fill_viridis_d(option = "plasma") + 
-    #color by threshold (maybe a color every 10?)
-    theme_minimal() +
-    theme(legend.position = "none",
+  #  ylim(0,130000) +
+    theme_minimal() + 
+    scale_fill_manual(labels=c("£30-40k","£40-50k","£50-60k",
+                               "£60-70k", "£70-80k", "£80-90k", "£110-120k"), 
+                      values = colors) +
+    theme(legend.position = "right",
+          legend.title = element_text(size = 10, face ="bold"),
+          axis.text.x =element_blank(),
           axis.ticks.x=element_blank(),
           axis.title = element_blank(),
           axis.text.y =element_blank(),
+          panel.grid = element_blank(),
           axis.ticks.y=element_blank(),
           text = element_text(size = 11),
           plot.title = element_text(size = 16, face ="bold", hjust = 0.5)) +
-    labs(title = "Income per household in the 33 London Boroughs\n") + 
-    coord_polar())
+  labs(fill = "Yearly \nHousehold \nIncome") + 
+  geom_text(data=label_data, aes(x=id, y = House_income+21000, label=Borough, hjust=hjust), 
+            color="black", fontface="bold",alpha=1, size=2, 
+             angle= label_data$angle, inherit.aes = FALSE) +
+  coord_polar())
 
+ggsave("Cartography/week_3/income_plot.png", plot = plt_i)
+
+  
