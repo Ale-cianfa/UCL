@@ -60,6 +60,18 @@ boroughs_os_sp <- data.frame(City = c(100, 0, 18.6), Barking = c(100, 0, 33.7), 
                           Southwark = c(100, 0, 22.6), Sutton = c(100, 0, 33.9), Tower_Hamlets = c(100, 0, 26.9), 
                           Waltham_Forest = c(100, 0, 34.8), Wandsworth = c(100, 0, 31.6), Westminster = c(100, 0, 28.6))
                           
+boroughs_i_sp <- data.frame(City = c(150000, 0, 63620), Barking = c(150000, 0, 34080), Barnet = c(150000, 0, 54530), 
+                             Bexley = c(150000, 0, 44430), Brent = c(150000, 0, 39630), Bromley = c(150000, 0, 55140), 
+                             Camden = c(150000, 0, 67990), Croydon = c(150000, 0, 45120), Ealing = c(150000, 0, 45690), 
+                             Enfield = c(150000, 0, 41250), Greenwich = c(150000, 0, 44370),  Hackney = c(150000, 0, 42690), 
+                             Hammersmith = c(150000, 0, 62910), Haringey = c(150000, 0, 45860), Harrow = c(150000, 0, 49060), 
+                             Havering = c(150000, 0, 44430), Hillingdon = c(150000, 0, 44950), Hounslow = c(150000, 0, 44490), 
+                             Islington = c(150000, 0, 54950), Kensington = c(150000, 0, 116350), Kingston = c(150000, 0, 56920), 
+                             Lambeth = c(150000, 0, 48610), Lewisham = c(150000, 0, 43360), Merton = c(150000, 0, 57160), 
+                             Newham = c(150000, 0, 34260), Redbridge = c(150000, 0, 45380), Richmond = c(150000, 0, 76610), 
+                             Southwark = c(150000, 0, 48000), Sutton = c(150000, 0, 49170), Tower_Hamlets = c(150000, 0, 45720), 
+                             Waltham_Forest = c(150000, 0, 39460), Wandsworth = c(150000, 0, 66220), Westminster = c(150000, 0, 80760))
+
 ## Spider Plot OS----                          
 wes_palette("GrandBudapest2")
 
@@ -68,6 +80,13 @@ wes_palette("GrandBudapest2")
                           pcol= rgb(0.2,0.5,0.5,0.5), pfcol=rgb(0.2,0.5,0.5,0.5), plwd=1,
                           cglcol="grey", cglty=1, axislabcol="grey",
                           seg = 4, caxislabels = seq(0,100,25), cglwd=0.8,vlcex=0.8))
+
+(income <- radarchart(boroughs_i_sp, axistype = 1, 
+                          title = "Average household income in the 33 London Boroughs",
+                          pcol= rgb(0.2,0.5,0.5,0.5), pfcol=rgb(0.2,0.5,0.5,0.5), plwd=1,
+                          cglcol="grey", cglty=1, axislabcol="grey",
+                          seg = 4, cglwd=0.8,vlcex=0.8))
+
 ## Circular barplot OS----
 str(boroughs_os)
 
@@ -103,7 +122,7 @@ boroughs_comp$condition_i <- c("4","1", "3", "2", "1", "3", "4", "2",
 
 colors_i <- c("#D7F3FE", "#8eb5f0", "#7364d2", 
             "#613dc1", "#5829a7", "#4e148c", "#3d0e61")
-(plt_i <- ggplot(boroughs_comp, aes(x = Borough, y = House_income, fill = condition)) + 
+(plt_i <- ggplot(boroughs_comp, aes(x = Borough, y = House_income, fill = condition_i)) + 
     geom_bar(stat='identity') + 
   #  ylim(0,130000) +
     theme_minimal() + 
@@ -121,15 +140,14 @@ colors_i <- c("#D7F3FE", "#8eb5f0", "#7364d2",
           text = element_text(size = 11),
           plot.title = element_text(size = 16, face ="bold", hjust = 0.5)) +
   labs(fill = "Yearly \nHousehold \nIncome") + 
-  geom_text(data=label_data, aes(x=id, y = House_income+21000, label=Borough, hjust=hjust), 
+  geom_text(data=label_data, aes(x=id, y = 120000, label=Borough, hjust=hjust), 
             color="black", fontface="bold",alpha=1, size=2, 
              angle= label_data$angle, inherit.aes = FALSE) +
   coord_polar())
 
-#ggsave("Cartography/week_3/income_plot.png", plot = plt_i)
+#ggsave("Cartography/week_3/img/income_plot.png", plot = plt_i, height = 5, width = 7)
 
-colors_os <- c("#D7F3FE", "#8eb5f0", "#7364d2", 
-              "#613dc1", "#5829a7", "#4e148c", "#3d0e61")
+## Circualr barplot open space-----
 
 boroughs_comp <- data.frame(boroughs_comp, condition_os= seq(1,33))
 
@@ -138,11 +156,16 @@ boroughs_comp$condition_os <- c("1","3", "3", "3", "2", "5", "2", "3",
                           "4","3","1","1", "3", "2", "2","3", 
                           "2","4", "5", "2","3","2","3", "3", "2")
 
-(plt_os <- ggplot(boroughs_comp, aes(x = Borough, y = open_space, fill = Borough)) + 
+colors_os <- c("#BFEDD0", "#84C2B0", "#279084", 
+               "#0C4644", "#011414")
+
+(plt_os <- ggplot(boroughs_comp, aes(x = Borough, y = open_space, fill = condition_os)) + 
     geom_bar(stat='identity') + 
-    #  ylim(0,130000) +
+    scale_fill_manual(labels=c("10-20%","20-30%","30-40%",
+                               "40-50%", "50-60%", "60-70%", "70-80%"), 
+                      values = colors_os) +
     theme_minimal() + 
-    theme(legend.position = "none",
+    theme(legend.position = "right",
           legend.title = element_text(size = 10, face ="bold"),
           axis.text.x =element_blank(),
           axis.ticks.x=element_blank(),
@@ -157,4 +180,7 @@ boroughs_comp$condition_os <- c("1","3", "3", "3", "2", "5", "2", "3",
               color="black", fontface="bold",alpha=1, size=2, 
               angle= label_data$angle, inherit.aes = FALSE) +
     coord_polar())
+
+#ggsave("Cartography/week_3/img/vegetation_plot.png", plot = plt_os, height = 5, width = 7)
+
   
