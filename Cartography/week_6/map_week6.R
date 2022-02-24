@@ -29,7 +29,7 @@ EU <- c("Belgium", "Bulgaria", "Czech Republic", "Denmark",
         "France", "Croatia", "Italy", "Cyprus", "Latvia", 
         "Lithuania", "Luxembourg", "Hungary", "Malta", "Netherlands",
         "Austria", "Poland", "Portugal", "Romania", "Slovenia",
-        "Slovakia", "Finland", "Sweden", "United Kingdom", "Switzerland")
+        "Slovakia", "Finland", "Sweden", "UK", "Switzerland")
 
 ## EU map----
 eu_map <- world %>% 
@@ -37,9 +37,10 @@ eu_map <- world %>%
   dplyr::select(-subregion)
 
 ## EU employment dataset----
-eu_employment <- emplyment %>% 
-  filter(Country %in% EU) %>% 
-  mutate(Country = str_replace(Country, "Czechia", "Czech Republic"))
+eu_employment <- employment %>%
+  mutate(Country = str_replace(Country, "Czechia", "Czech Republic")) %>% 
+  mutate(Country = str_replace(Country, "United Kingdom", "UK")) %>% 
+  filter(Country %in% EU)
 
 eu_employment <- left_join(eu_map, eu_employment, by = c("region" = "Country")) 
 head(eu_employment)
@@ -67,15 +68,21 @@ eu_employment$Pension <- as.numeric(eu_employment$Pension)
 
 # Starting to map----
 (EU_map <- ggplot() +
-   geom_polygon(data = eu_employment, aes(x = long, y = lat, group = group, fill = Employment_ratio) 
-                , color="black", size = 0.3) + #plot the data points on the map
-   theme_minimal() + #choosing what type of background we want to display 
-   #scale_fill_viridis(direction = -1) +
+   geom_polygon(data = eu_employment, 
+                aes(x = long, y = lat,
+                    group = group, fill = Employment_ratio),
+                    color="black", size = 0.1) + #plot the data points on the map
+   theme_void() + #choosing what type of background I want to display 
+   scale_fill_viridis(direction = -1) +
    ylim(35,70) + #this allow us to section where we want our focus
-   coord_map())  #making the projection nice
-
-
-
+   theme(plot.title = element_text(family= "serif", size = 16, hjust = -0.5, face = "bold"),
+         legend.position = "bottom",
+         legend.title = element_text(family= "serif",size = 12, face ="bold"),
+         legend.text = element_text(family= "serif",size = 9))  +
+   labs(y = "Latitude", x = "Longitude",
+        fill = "Employment \nRatio (%)",
+        title = "Employment in the EU") +
+  coord_map("gilbert"))
 
 
 
