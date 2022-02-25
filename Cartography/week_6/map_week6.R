@@ -6,7 +6,9 @@
 library(tidyverse)  # for data wrangling and plotting (dplyr and ggplot packages)
 library(ggrepel)
 library(ggtext)
+library(extrafont)
 library(fmsb)
+library(RColorBrewer) #for some more colors
 library("wesanderson")
 library(viridis)
 library(RColorBrewer)
@@ -37,16 +39,16 @@ eu_map <- world %>%
   dplyr::select(-subregion)
 
 ## EU employment dataset----
-eu_employment <- employment %>%
+employment <- employment %>%
   mutate(Country = str_replace(Country, "Czechia", "Czech Republic")) %>% 
   mutate(Country = str_replace(Country, "United Kingdom", "UK")) %>% 
   filter(Country %in% EU)
 
-eu_employment <- left_join(eu_map, eu_employment, by = c("region" = "Country")) 
+eu_employment <- left_join(eu_map, employment, by = c("region" = "Country")) 
 head(eu_employment)
 str(eu_employment)
 
-eu_employment <- eu_employment %>% 
+eu_employment <- employment %>% 
   rename(HDI = HDI.rank, Employment_ratio = Employment.to.population.ratio, 
          Labour_participation = Labour.force.participation.rate,
          Agriculture = Employment.in.agriculture, 
@@ -66,25 +68,50 @@ eu_employment$Youth_not_school_or_employment <- as.numeric(eu_employment$Youth_n
 eu_employment$High_to_low <- as.numeric(eu_employment$High_to_low)
 eu_employment$Pension <- as.numeric(eu_employment$Pension)
 
-# Starting to map----
+
+# Adding Centroids----
+centroids <- read.csv("Cartography/week_6/centroids.csv")
+Europe <- c("Belgium", "Bulgaria", "Czech Rep.", "Denmark", 
+            "Germany", "Estonia", "Ireland", "Greece", "Spain", 
+            "France", "Croatia", "Italy", "Cyprus", "Latvia", 
+            "Lithuania", "Luxembourg", "Hungary", "Malta", "Netherlands",
+            "Austria", "Poland", "Portugal", "Romania", "Slovenia",
+            "Slovakia", "Finland", "Sweden", "United Kingdom","Switzerland")
+centroids <- centroids %>% 
+  filter(name %in% Europe) %>% 
+  dplyr::select(name, Longitude, Latitude, iso_a3)
+
+# Fixing some centroids lables----
+centroids["12", "Longitude"] <- 2 #here we are individually changing the values in a specific box
+
+centroids["12", "Latitude"] <- 46 
+
+centroids["5", "Longitude"] <- 33 #here we are individually changing the values in a specific box
+
+centroids["5", "Latitude"] <- 35
+
+# Making the EU employment map----
 (EU_map <- ggplot() +
-   geom_polygon(data = eu_employment, 
-                aes(x = long, y = lat,
+   geom_polygon(data = eu_employment, aes(x = long, y = lat,
                     group = group, fill = Employment_ratio),
                     color="black", size = 0.1) + #plot the data points on the map
    theme_void() + #choosing what type of background I want to display 
-   scale_fill_viridis(direction = -1) +
+   scale_fill_fermenter(direction = 1, palette = "PuBuGn") + 
+   #geom_text(data = centroids, aes(Longitude, Latitude, label = iso_a3), size = 2.5) + 
    ylim(35,70) + #this allow us to section where we want our focus
-   theme(plot.title = element_text(family= "serif", size = 16, hjust = -0.5, face = "bold"),
+   theme(plot.title = element_text(family = "Georgia",size = 16, hjust = 0, face = "bold"),
          legend.position = "bottom",
-         legend.title = element_text(family= "serif",size = 12, face ="bold"),
-         legend.text = element_text(family= "serif",size = 9))  +
-   labs(y = "Latitude", x = "Longitude",
-        fill = "Employment \nRatio (%)",
-        title = "Employment in the EU") +
+         legend.title = element_text(family = "Georgia", size = 10, face ="bold"),
+         legend.text = element_text(family = "Georgia",size = 8))  +
+   labs(fill = "Employment Ratio (%)",
+        title = "Employment in Europe: Where are we?") +
   coord_map("gilbert"))
 
+ggsave(plot = EU_map, filename = "Cartography/week_6/img/Ratio_employment.png", height = 9, width = 7)
 
+
+labels <- eu_employment 
+str(labels)
 
 
 
