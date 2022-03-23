@@ -29,22 +29,13 @@ em_18_39$Year<-gsub("X"," ", as.character(em_18_39$Year)) #removing the x from t
 
 #Making sure all the columns are the right data type: 
 em_18_39$Year <- as.factor(em_18_39$Year)
-em_18_39$Stato.estero.di..destinazione <- as.factor(em_18_39$Stato.estero.di..destinazione)
+em_18_39$Country.of.next.residence <- as.factor(em_18_39$Country.of.next.residence)
 em_18_39$Length <- as.numeric(em_18_39$Length)
 
 #Renaming the Columns: 
 em_18_39 <- em_18_39 %>% 
-  rename(Destinazione = Stato.estero.di..destinazione,
+  rename(Destinazione = Country.of.next.residence,
          Total = Length)
-
-#Dropping general rows: 
-em_18_39<- em_18_39[!(em_18_39$Destinazione=="Mondo" | 
-                        em_18_39$Destinazione=="Extra Ue27" | 
-                        em_18_39$Destinazione=="Asia" | 
-                        em_18_39$Destinazione=="Oceania" | 
-                        em_18_39$Destinazione=="America" | 
-                        em_18_39$Destinazione=="Unione europea 27" |
-                        em_18_39$Destinazione=="Europa"),]
 
 #DOWNLOADING WORLD DATA:----
 
@@ -60,6 +51,9 @@ centroids <- centroids %>%
   dplyr::select(name, Longitude, Latitude, iso_a3)
 
 #Joining the datasets 
+em_18_39 <- left_join(em_18_39, centroids, by = c("Destinazione" = "name")) 
+#NB: there are some countries to fix cause they don't match up! 
+
 
 #STARTING TO MAP:----
 
