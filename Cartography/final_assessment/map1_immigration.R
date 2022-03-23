@@ -13,5 +13,71 @@ library(viridis) #for the colors
 library(maps) #for the base map data
 library(hrbrthemes) #for the fonts in ggplot
 
-#LOADING THE ISTAT DATA: 
+getwd()
+
+#LOADING THE ISTAT DATA 18-39: 
+em_18_39 <- read.csv("Cartography/final_assessment/map_1_data/emigrazione_18_39.csv")
+str(em_18_39) #here we see everything is a character value so we need to do some data wrangling 
+
+#BASIC DATA WRANGLING ISTAT 18-39:----
+
+#Making the data into longform:
+em_18_39 <- gather(em_18_39, Year, Length,  #in this order: data frame, key, value
+                          c(X2009, X2010, X2011, X2012, X2013, X2014, X2015, X2016, X2017, X2018, X2019))  
+
+em_18_39$Year<-gsub("X"," ", as.character(em_18_39$Year)) #removing the x from the years
+
+#Making sure all the columns are the right data type: 
+em_18_39$Year <- as.factor(em_18_39$Year)
+em_18_39$Stato.estero.di..destinazione <- as.factor(em_18_39$Stato.estero.di..destinazione)
+em_18_39$Length <- as.numeric(em_18_39$Length)
+
+#Renaming the Columns: 
+em_18_39 <- em_18_39 %>% 
+  rename(Destinazione = Stato.estero.di..destinazione,
+         Total = Length)
+
+#Dropping general rows: 
+em_18_39<- em_18_39[!(em_18_39$Destinazione=="Mondo" | 
+                        em_18_39$Destinazione=="Extra Ue27" | 
+                        em_18_39$Destinazione=="Asia" | 
+                        em_18_39$Destinazione=="Oceania" | 
+                        em_18_39$Destinazione=="America" | 
+                        em_18_39$Destinazione=="Unione europea 27" |
+                        em_18_39$Destinazione=="Europa"),]
+
+#DOWNLOADING WORLD DATA:----
+
+world <- map_data("world")
+
+#Adding Centroids: 
+  #This is where the lines will connect to 
+centroids <- read.csv("Cartography/final_assessment/map_1_data//centroids.csv")
+str(centroids)
+
+#Only keeping the important bits
+centroids <- centroids %>%
+  dplyr::select(name, Longitude, Latitude, iso_a3)
+
+#Joining the datasets 
+
+#STARTING TO MAP:----
+
+#Basic map with all the centroids:
+
+(world_basic <- ggplot() +
+   geom_polygon(data = India, aes(x=long, y = lat, group = group), fill="#EDEDED", alpha=1) +
+   geom_point( data = cities_india, aes(x = lng, y = lat, size = 1, colour = city)) +
+   theme_minimal() +
+   scale_color_viridis_d() +
+   guides(size = FALSE) +
+   coord_map())
+  
+
+
+
+
+
+
+
 
