@@ -120,17 +120,19 @@ boroughs_comp$condition_i <- c("4","1", "3", "2", "1", "3", "4", "2",
                           "2","2","3","9", "3", "2", "2","3", 
                           "1","2", "5", "2","2","2","1", "4", "6")
 
+
+
 colors_i <- c("#D7F3FE", "#8eb5f0", "#7364d2", 
             "#613dc1", "#5829a7", "#4e148c", "#3d0e61")
 (plt_i <- ggplot(boroughs_comp, aes(x = Borough, y = House_income, fill = condition_i)) + 
     geom_bar(stat='identity') + 
-  #  ylim(0,130000) +
     theme_minimal() + 
+    ylim(0,130000) +
     scale_fill_manual(labels=c("£30-40k","£40-50k","£50-60k",
                                "£60-70k", "£70-80k", "£80-90k", "£110-120k"), 
                       values = colors_i) +
     theme(legend.position = "right",
-          legend.title = element_text(size = 10, face ="bold"),
+          legend.title = element_text(size = 12, face ="bold"),
           axis.text.x =element_blank(),
           axis.ticks.x=element_blank(),
           axis.title = element_blank(),
@@ -138,14 +140,14 @@ colors_i <- c("#D7F3FE", "#8eb5f0", "#7364d2",
           panel.grid = element_blank(),
           axis.ticks.y=element_blank(),
           text = element_text(size = 11),
-          plot.title = element_text(size = 16, face ="bold", hjust = 0.5)) +
+          plot.title = element_text(size = , face ="bold", hjust = 0.5)) +
   labs(fill = "Yearly \nHousehold \nIncome") + 
-  geom_text(data=label_data, aes(x=id, y = 120000, label=Borough, hjust=hjust), 
+  geom_text(data=label_data, aes(x=id, y = 120000, label = Borough, hjust = hjust), 
             color="black", fontface="bold",alpha=1, size=2, 
              angle= label_data$angle, inherit.aes = FALSE) +
   coord_polar())
 
-#ggsave("Cartography/week_3/img/income_plot.png", plot = plt_i, height = 5, width = 7)
+ggsave("Cartography/week_3/img/income_plot.png", plot = plt_i)
 
 ## Circualr barplot open space-----
 
@@ -164,6 +166,7 @@ colors_os <- c("#BFEDD0", "#84C2B0", "#279084",
     scale_fill_manual(labels=c("10-20%","20-30%","30-40%",
                                "40-50%", "50-60%", "60-70%", "70-80%"), 
                       values = colors_os) +
+    ylim(0,100) +
     theme_minimal() + 
     theme(legend.position = "right",
           legend.title = element_text(size = 10, face ="bold"),
@@ -174,13 +177,13 @@ colors_os <- c("#BFEDD0", "#84C2B0", "#279084",
           panel.grid = element_blank(),
           axis.ticks.y=element_blank(),
           text = element_text(size = 11),
-          plot.title = element_text(size = 16, face ="bold", hjust = 0.5)) +
+          plot.title = element_text(size = 1, face ="bold", hjust = 0.5)) +
     labs(fill = "Percentage \nGreen \nSpace") + 
     geom_text(data=label_data, aes(x=id, y = 60, label=Borough, hjust=hjust), 
               color="black", fontface="bold",alpha=1, size=2, 
               angle= label_data$angle, inherit.aes = FALSE) +
     coord_polar())
 
-#ggsave("Cartography/week_3/img/vegetation_plot.png", plot = plt_os, height = 5, width = 7)
+ggsave("Cartography/week_3/img/vegetation_plot.png", plot = plt_os, height = 5, width = 7)
 
   

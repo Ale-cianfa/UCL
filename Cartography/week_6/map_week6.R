@@ -7,6 +7,7 @@ library(tidyverse)  # for data wrangling and plotting (dplyr and ggplot packages
 library(ggrepel)
 library(ggtext)
 library(extrafont)
+library(maptools)
 library(fmsb)
 library(RColorBrewer) #for some more colors
 library("wesanderson")
@@ -48,7 +49,7 @@ eu_employment <- left_join(eu_map, employment, by = c("region" = "Country"))
 head(eu_employment)
 str(eu_employment)
 
-eu_employment <- employment %>% 
+eu_employment <- eu_employment %>% 
   rename(HDI = HDI.rank, Employment_ratio = Employment.to.population.ratio, 
          Labour_participation = Labour.force.participation.rate,
          Agriculture = Employment.in.agriculture, 
@@ -97,7 +98,7 @@ centroids["5", "Latitude"] <- 35
                     color="black", size = 0.1) + #plot the data points on the map
    theme_void() + #choosing what type of background I want to display 
    scale_fill_fermenter(direction = 1, palette = "PuBuGn") + 
-   #geom_text(data = centroids, aes(Longitude, Latitude, label = iso_a3), size = 2.5) + 
+   geom_text(data = centroids, aes(Longitude, Latitude, label = iso_a3), size = 2.5) + 
    ylim(35,70) + #this allow us to section where we want our focus
    theme(plot.title = element_text(family = "Georgia",size = 16, hjust = 0, face = "bold"),
          legend.position = "bottom",
@@ -107,11 +108,19 @@ centroids["5", "Latitude"] <- 35
         title = "Employment in Europe: Where are we?") +
   coord_map("gilbert"))
 
-ggsave(plot = EU_map, filename = "Cartography/week_6/img/Ratio_employment.png", height = 9, width = 7)
+#ggsave(plot = EU_map, filename = "Cartography/week_6/img/Ratio_employment.png", height = 9, width = 7)
 
+data(wrld_simpl)
+plot(eu)
 
-labels <- eu_employment 
-str(labels)
+library(ggmap)
+library(gridExtra)
 
+map <- get_stamenmap(bbox = c(left = -13, 
+                             bottom = 23, right = 37, top = 71), 
+                    zoom = 4, maptype = "watercolor")
 
-
+ggmap(map) + 
+  theme_void() + 
+  theme(plot.title = element_text(colour = "orange"), 
+    panel.border = element_rect(colour = "grey", fill=NA, size=2))
