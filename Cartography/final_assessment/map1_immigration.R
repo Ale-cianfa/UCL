@@ -177,6 +177,6 @@ str(em_tot)
 
 #STACKED PLOT:----
 
-(stacked <- ggplot(em_tot, aes(x = Year , y = Emigrations, fill = X)) + 
-   geom_area(alpha=0.8 , size=.2, color = "black"))
+(stacked <- ggplot(em_tot, aes(x = Year , y = Emigrations, fill = X))) + 
+   geom_area(position = "stack"))
  
