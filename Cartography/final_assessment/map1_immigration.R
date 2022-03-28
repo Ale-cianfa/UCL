@@ -19,7 +19,32 @@ getwd()
 em_18_39 <- read.csv("Cartography/final_assessment/map_1_data/emigrazione_18_39.csv")
 str(em_18_39) #here we see everything is a character value so we need to do some data wrangling 
 
+
+em_18_39$X2009 <- as.numeric(em_18_39$X2009)
+em_18_39$X2010 <- as.numeric(em_18_39$X2010)
+em_18_39$X2011 <- as.numeric(em_18_39$X2011)
+em_18_39$X2012 <- as.numeric(em_18_39$X2012)
+em_18_39$X2013 <- as.numeric(em_18_39$X2013)
+em_18_39$X2014 <- as.numeric(em_18_39$X2014)
+em_18_39$X2015 <- as.numeric(em_18_39$X2015)
+em_18_39$X2016 <- as.numeric(em_18_39$X2016)
+em_18_39$X2017 <- as.numeric(em_18_39$X2017)
+em_18_39$X2018 <- as.numeric(em_18_39$X2018)
+em_18_39$X2019 <- as.numeric(em_18_39$X2019)
+
 #BASIC DATA WRANGLING ISTAT 18-39:----
+str(em_18_39)
+
+colnms <- c("X2009", "X2010", "X2011", 
+            "X2012", "X2013", 
+            "X2014", "X2015", "X2016",
+            "X2017", "X2018", "X2019")
+
+em_18_39$Total <- rowSums(em_18_39[, colnms], na)
+
+write.csv(em_18_39,'Cartography/final_assessment/map_1_data/em_18_39.csv')
+
+
 
 #Making the data into longform:
 em_18_39 <- gather(em_18_39, Year, Length,  #in this order: data frame, key, value
@@ -97,23 +122,61 @@ em_18_39 <- em_18_39 %>%
 em_18_39 <- left_join(em_18_39, centroids, by = c("Destinazione" = "name")) 
 #NB: there are some countries to fix cause they don't match up! 
 
+Longitude_IT <- 12.4964
+Latitude_IT <- 41.902
+
+Italy <- data.frame(Longitude_IT, Latitude_IT)
+
+em_18_39 <- cbind(em_18_39, Italy)
 
 #STARTING TO MAP:----
 
-#Basic map with all the centroids:
-
+#Basic map with all the centroids and geom segments! 
 (world_basic <- ggplot() +
-   geom_polygon(data = world, aes(x=long, y = lat, group = group), fill="#EDEDED", alpha=1) +
-   geom_point( data = centroids, aes(x = Longitude, y = Latitude, size = 0.3, colour = name)) +
+   geom_polygon(data = world, aes(x=long, y = lat, group = group), col="#f2f2f2", bg="black", lwd=0.005) +
+   ylim(-80,80) +
+   geom_point(data = em_18_39, aes(x = Longitude, y = Latitude, colour = Destinazione)) +
+   geom_segment(data = em_18_39, aes(y=Latitude_IT, x=Longitude_IT, xend=Longitude, yend=Latitude, colour = Destinazione), alpha = 0.2)+
    theme_minimal() +
-   scale_color_viridis_d() +
+   theme(legend.position = "none") +
    coord_map())
-  
+
+#DATA STACKED PLOT:----
+em_tot <- read.csv("Cartography/final_assessment/map_1_data/emigrazione_tot_world.csv")
+
+em_tot$X2009 <- as.numeric(em_tot$X2009)
+em_tot$X2010 <- as.numeric(em_tot$X2010)
+em_tot$X2011 <- as.numeric(em_tot$X2011)
+em_tot$X2012 <- as.numeric(em_tot$X2012)
+em_tot$X2013 <- as.numeric(em_tot$X2013)
+em_tot$X2014 <- as.numeric(em_tot$X2014)
+em_tot$X2015 <- as.numeric(em_tot$X2015)
+em_tot$X2016 <- as.numeric(em_tot$X2016)
+em_tot$X2017 <- as.numeric(em_tot$X2017)
+em_tot$X2018 <- as.numeric(em_tot$X2018)
+em_tot$X2019 <- as.numeric(em_tot$X2019)
+
+str(em_tot)
+
+#The value for 40-64 in 2014 was coming out of as an NA
+em_tot[2, 7] = 37383
+
+#Adding a column for % difference between 2009 and 2019 
+em_tot <- em_tot %>% 
+  mutate(perc_diff = (((em_tot$X2019 - em_tot$X2009)/em_tot$X2009) *100))
+
+em_tot <- gather(em_tot, Year, Emigrations,  #in this order: data frame, key, value
+                   c(X2009, X2010, X2011, X2012, X2013, X2014, X2015, X2016, X2017, X2018, X2019))  
+
+str(em_tot)
+
+em_tot$Year <- as.factor(em_tot$Year)
+em_tot$X <- as.factor(em_tot$X)
+str(em_tot)
 
 
+#STACKED PLOT:----
 
-
-
-
-
-
+(stacked <- ggplot(em_tot, aes(x = Year , y = Emigrations, fill = X)) + 
+   geom_area(alpha=0.8 , size=.2, color = "black"))
+ 
