@@ -12,6 +12,15 @@ library(ggthemes) #for extra map themes
 library(viridis) #for the colors
 library(maps) #for the base map data
 library(hrbrthemes) #for the fonts in ggplot
+library(packcircles)
+library(extrafont)
+font_import()
+
+# Vector of font family names
+fonts()
+
+# Show entire table
+fonttable()
 
 getwd()
 
@@ -40,7 +49,10 @@ colnms <- c("X2009", "X2010", "X2011",
             "X2014", "X2015", "X2016",
             "X2017", "X2018", "X2019")
 
-em_18_39$Total <- rowSums(em_18_39[, colnms], na)
+
+em_18_39[is.na(em_18_39)] <- 0
+
+em_18_39$Total <- rowSums(em_18_39[, colnms])
 
 write.csv(em_18_39,'Cartography/final_assessment/map_1_data/em_18_39.csv')
 
@@ -177,6 +189,43 @@ str(em_tot)
 
 #STACKED PLOT:----
 
-(stacked <- ggplot(em_tot, aes(x = Year , y = Emigrations, fill = X))) + 
+(stacked <- ggplot(em_tot, aes(x = Year , y = Emigrations, fill = X)) + 
    geom_area(position = "stack"))
- 
+
+# CIRCUALAR PLOT:----
+
+em_cont <- read.csv("Cartography/final_assessment/map_1_data/emigrazione_by_continent.csv")
+
+packing <- circleProgressiveLayout(em_cont$Tot, sizetype='area')
+
+em_cont_pack <- cbind(em_cont, packing)
+
+em_cont_pack.gg <- circleLayoutVertices(packing, npoints=50)
+
+em_cont_pack$Area <- gsub("evermore", "Europe", em_cont_pack$Area)
+
+
+(continents <- ggplot() + 
+  geom_polygon(data = em_cont_pack.gg, aes(x, y, group = id, fill=as.factor(id)), alpha = 1) +
+  scale_size_continuous(range = c(1,4)) +
+  scale_fill_manual(values = c("#002B5D", "#2A71C5", "#0055B9", "#568ED0", "#00479A")) +
+  theme_void() + 
+  theme(legend.position="none") +
+  coord_equal())
+getwd()
+
+ggsave("Cartography/final_assessment/map_1_img/continent_plot_blue.png", plot = continents, width = 8, height = 5)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
