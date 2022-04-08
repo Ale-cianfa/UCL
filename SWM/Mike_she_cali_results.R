@@ -11,10 +11,10 @@ library(naniar)
 getwd()
 
 #Loading the csvs----
-cali_wl <- read.csv("SWM/Mike_she/calibration_WL.csv")
 obs_wl <- read.csv("SWM/Mike_she/observed_WL.csv")
-cali_discharge <- read.csv("SWM/Mike_she/Calibration_discharge_mike_she.csv")
 obs_discharge <- read.csv("SWM/Mike_she/observed_discharge.csv")
+cali_wl <- read.csv("SWM/Mike_she/calibration_WL.csv")
+cali_discharge <- read.csv("SWM/Mike_she/Calibration_discharge_mike_she.csv")
 
 # Wrangling the data----
 cali_discharge$Time <- as.Date(cali_discharge$Time, format = "%d/%m/%Y" )
