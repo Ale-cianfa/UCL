@@ -7,6 +7,7 @@ library(viridis) #for the colors
 library(RColorBrewer) #for some more colors
 library(lubridate) 
 library(naniar)
+library(Metrics)
 
 getwd()
 
@@ -26,7 +27,7 @@ str(obs_discharge)
 str(obs_wl)
 str(cali_wl)
 
-obs_discharge_cali <- filter(obs_discharge, Time <= "1975-12-31")
+obs_discharge_cali <- filter(obs_discharge, obs_discharge$Time <= "1975-12-31")
 
 obs_wl <- obs_wl %>% 
   replace_with_na(replace = list(Obs_5 = -999.000, 
@@ -38,13 +39,17 @@ obs_wl <- filter(obs_wl, Time <= "1975-12-31")
 
 #Calibration graph for discharge at Hagebro----
 (discharge_hag <- ggplot() +
-  geom_point(data = obs_discharge_cali, 
+    geom_point(data = obs_discharge_cali, 
              aes(x = Time, y = observed_karup_at_hagebro), size = 0.2, color = "#d2b7e5") +
-  geom_line(data = cali_discharge, 
+    geom_line(data = cali_discharge, 
               aes(x = Time, y= Calibrated_Karup_at_Hagebro, group = 1), 
               color="#7b2cbf") +
-  theme_minimal() +
-  ggtitle("Calibration vs. Observed measurements of water discharge at Hagebro"))
+    theme_minimal() +
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+    labs(y = expression(paste("Discharge ", m^{3},sec^{-1}))) +
+    ggtitle("Calibration vs. Observed measurements of water discharge at Hagebro"))
+
+ggsave("SWM/IMG/discharge_cali_hagebro.png", plot = discharge_hag, height = 5, width = 8)
 
 #Calibration graph for discharge at Karup----
 (discharge_kar <- ggplot() +
@@ -54,7 +59,11 @@ obs_wl <- filter(obs_wl, Time <= "1975-12-31")
              aes(x = Time, y= Calibrated_Karup_at_Karup, group = 1), 
              color="#7b2cbf") +
    theme_minimal() +
+   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+   labs(y = expression(paste("Discharge ", m^{3},sec^{-1})))+ 
    ggtitle("Calibration vs. Observed measurements of water discharge at Karup"))
+
+ggsave("SWM/IMG/discharge_cali_karup.png", plot = discharge_kar, height = 5, width = 8)
 
 #Calibration graph for WL Obsv 5----
 (obsv_5_wl <- ggplot() +
@@ -64,7 +73,11 @@ obs_wl <- filter(obs_wl, Time <= "1975-12-31")
              aes(x = Time, y= cali_obs_5), 
              color="#013a63") +
    theme_minimal() +
+   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+   ylab("Ground water elevation (m)") + 
    ggtitle("Calibrated vs. Modelled Water Level at Borehole n.5"))
+
+ggsave("SWM/IMG/obs5_cali.png", plot = obsv_5_wl, height = 5, width = 8)
 
 #Calibration graph for WL Obsv 35----
 (obsv_35_wl <- ggplot() +
@@ -74,7 +87,11 @@ obs_wl <- filter(obs_wl, Time <= "1975-12-31")
              aes(x = Time, y= cali_obs_35), 
              color="#013a63") +
    theme_minimal() +
+   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+   ylab("Ground water elevation (m)") + 
    ggtitle("Calibrated vs. Modelled Water Level at Observation Borehole n.35"))
+
+ggsave("SWM/IMG/obs35_cali.png", plot = obsv_35_wl, height = 5, width = 8)
 
 #Calibration graph for WL Obsv 37----
 (obsv_37_wl <- ggplot() +
@@ -84,7 +101,11 @@ obs_wl <- filter(obs_wl, Time <= "1975-12-31")
              aes(x = Time, y= cali_obs_37), 
              color="#013a63") +
    theme_minimal() +
+   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+   ylab("Ground water elevation (m)") + 
    ggtitle("Calibrated vs. Modelled Water Level at Observation Borehole n.37"))
+
+ggsave("SWM/IMG/obs37_cali.png", plot = obsv_37_wl, height = 5, width = 8)
 
 #Calibration graph for WL Obsv 65----
 (obsv_65_wl <- ggplot() +
@@ -94,7 +115,10 @@ obs_wl <- filter(obs_wl, Time <= "1975-12-31")
              aes(x = Time, y= cali_obs_65), 
              color="#013a63") +
    theme_minimal() +
+   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+   ylab("Ground water elevation (m)") + 
    ggtitle("Calibrated vs. Modelled Water Level at Observation Borehole n.65"))
 
+ggsave("SWM/IMG/obs65_cali.png", plot = obsv_65_wl, height = 5, width = 8)
 
 

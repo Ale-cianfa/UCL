@@ -36,8 +36,12 @@ obs_wl <- obs_wl %>%
    geom_line(data = low_discharge, 
              aes(x = Time, y= Karup_at_Hagebro, group = 1), 
              color="#7b2cbf") +
+   ylim(3,7.5) +
    theme_minimal() +
+   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+   labs(y = expression(paste("Discharge ", m^{3},sec^{-1}))) +
    ggtitle("Low Climate Simulation vs. Observed measurements of water discharge at Hagebro"))
+ggsave("SWM/IMG/discharge_low_hag.png", plot = climate_low_discharge_hag, height = 3, width = 8)
 
 #Calibration graph for discharge at Karup----
 (climate_low_discharge_kar <- ggplot() +
@@ -47,8 +51,12 @@ obs_wl <- obs_wl %>%
              aes(x = Time, y= Karup_at_Karup, group = 1), 
              color="#7b2cbf") +
    theme_minimal() +
+    ylim(1.5,3.25) +
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+    labs(y = expression(paste("Discharge ", m^{3},sec^{-1}))) +
    ggtitle("Low Climate Simulation vs. Observed measurements of water discharge at Karup"))
 
+ggsave("SWM/IMG/discharge_low_kar.png", plot = climate_low_discharge_kar, height = 3, width = 8)
 
 #Climate simulation low graph for WL Obsv 5----
 (obsv_5_wl <- ggplot() +
@@ -58,7 +66,11 @@ obs_wl <- obs_wl %>%
              aes(x = Time, y= low_Obs_5), 
              color="#013a63") +
    theme_minimal() +
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+    ylab("Ground water elevation (m)") +
    ggtitle("Low Climate Simulation vs. Modelled Water Level at Borehole n.5"))
+
+ggsave("SWM/IMG/obs5_low.png", plot = obsv_5_wl, height = 3, width = 8)
 
 #Climate simulation low graph for WL Obsv 35----
 (obsv_35_wl <- ggplot() +
@@ -68,7 +80,10 @@ obs_wl <- obs_wl %>%
              aes(x = Time, y= low_Obs_35), 
              color="#013a63") +
    theme_minimal() +
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+    ylab("Ground water elevation (m)") +
    ggtitle("Low Climate Simulation vs. Modelled Water Level at Observation Borehole n.35"))
+ggsave("SWM/IMG/obs35_low.png", plot = obsv_35_wl, height = 3, width = 8)
 
 #Climate simulation low graph for WL Obsv 37----
 (obsv_37_wl <- ggplot() +
@@ -78,7 +93,10 @@ obs_wl <- obs_wl %>%
              aes(x = Time, y= low_Obs_37), 
              color="#013a63") +
    theme_minimal() +
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+    ylab("Ground water elevation (m)") +
    ggtitle("Low Climate Simulation vs. Modelled Water Level at Observation Borehole n.37"))
+ggsave("SWM/IMG/obs37_low.png", plot = obsv_37_wl, height = 3, width = 8)
 
 #Climate simulation low graph for WL Obsv 65----
 (obsv_65_wl <- ggplot() +
@@ -88,7 +106,10 @@ obs_wl <- obs_wl %>%
              aes(x = Time, y= low_Obs_65), 
              color="#013a63") +
    theme_minimal() +
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+    ylab("Ground water elevation (m)") +
    ggtitle("Low Climate Simulation vs. Modelled Water Level at Observation Borehole n.65"))
+ggsave("SWM/IMG/obs65_low.png", plot = obsv_65_wl, height = 3, width = 8)
 
 
 
