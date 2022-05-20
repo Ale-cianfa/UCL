@@ -48,27 +48,31 @@ obs_wl <- obs_wl %>%
                                  Obs_37 = -999.000, 
                                  Obs_65 = -999.000))
 
+obs_discharge <- obs_discharge %>%
+  mutate(newcol = 1)
 
-(cali_vali_hag <- ggplot() +
-    geom_point(data = obs_discharge, 
-               aes(x = Time, y = observed_karup_at_hagebro), size = 0.2, color = "#d2b7e5") +
-    geom_line(data = vali_discharge, 
-              aes(x = Time, y= karup_at_hagebro, group = 1),
-              color = "#7b2cbf") +
-    geom_line(data = cali_discharge, 
-              aes(x = Time, y= Calibrated_Karup_at_Hagebro, group = 1), 
-              color = "#240046") +
-    ylim(3,7.5) +
-    theme_minimal() +
-    theme(legend.position = "right", #position of the legend
-          legend.text = element_text(size = 12)) +
-    theme(panel.grid.major = element_blank(), 
-          panel.grid.minor = element_blank())+
-    labs(y = expression(paste("Discharge ", m^{3},sec^{-1}))) +
-    ggtitle("Calibration and Validation Discharge at Hagebro"))
 
-ggsave("SWM/IMG/cali_vali_hag.png", plot = cali_vali_hag, height = 3, width = 9)
+#DISCHARGE----
+##Discharge at Hagebro----
+(cali_vali_kar <- ggplot() +
+   geom_point(data = obs_discharge, 
+              aes(x = Time, y = observed_karup_at_hagebro), size = 0.2, color = "#d2b7e5") +
+   geom_line(data = vali_discharge, 
+             aes(x = Time, y= karup_at_hagebro, group = 1),
+             color = "#7b2cbf") +
+   geom_line(data = cali_discharge, 
+             aes(x = Time, y= Calibrated_Karup_at_Hagebro, group = 1), 
+             color = "#240046") +
+   ylim(3,7.5) +
+   theme_minimal() +
+   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+   labs(y = expression(paste("Discharge ", m^{3},sec^{-1}))) +
+   ggtitle("Calibration and Validation Discharge at Hagebro"))
 
+
+#ggsave("SWM/IMG/cali_vali_hag.png", plot = cali_vali_hag, height = 3, width = 9)
+
+##Discharge at Karup----
 (cali_vali_kar <- ggplot() +
     geom_point(data = obs_discharge, 
                aes(x = Time, y = observed_karup_at_karup), size = 0.2, color = "#d2b7e5") +
@@ -88,7 +92,7 @@ ggsave("SWM/IMG/cali_vali_kar.png", plot = cali_vali_kar, height = 3, width = 9)
 
 
 # OBSERVATIONS----
-## 5----
+##Obs 5----
 (obsv_5_wl <- ggplot() +
    geom_point(data = obs_wl, 
               aes(x = Time, y = Obs_5), size = 1, color = "#a9d6e5") +
@@ -105,7 +109,7 @@ ggsave("SWM/IMG/cali_vali_kar.png", plot = cali_vali_kar, height = 3, width = 9)
 
 ggsave("SWM/IMG/obs5_vli.png", plot = obsv_5_wl, height = 3, width = 8)
 
-## 35---
+##Obs 35----
 
 (obsv_35_wl <- ggplot() +
     geom_point(data = obs_wl, 
@@ -123,7 +127,7 @@ ggsave("SWM/IMG/obs5_vli.png", plot = obsv_5_wl, height = 3, width = 8)
 
 ggsave("SWM/IMG/obs35.png", plot = obsv_35_wl, height = 3, width = 8)
 
-## 37---
+##Obs 37----
 
 (obsv_37_wl <- ggplot() +
     geom_point(data = obs_wl, 
@@ -141,7 +145,7 @@ ggsave("SWM/IMG/obs35.png", plot = obsv_35_wl, height = 3, width = 8)
 
 ggsave("SWM/IMG/obs37.png", plot = obsv_37_wl, height = 3, width = 8)
 
-## 65---
+##Obs 65----
 
 (obsv_65_wl <- ggplot() +
     geom_point(data = obs_wl, 
